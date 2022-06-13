@@ -33,7 +33,7 @@ CREATE TABLE `next_evolution` (
   PRIMARY KEY (`id_next_evol`),
   KEY `id` (`id`),
   CONSTRAINT `next_evolution_ibfk_1` FOREIGN KEY (`id`) REFERENCES `pokemons` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +42,7 @@ CREATE TABLE `next_evolution` (
 
 LOCK TABLES `next_evolution` WRITE;
 /*!40000 ALTER TABLE `next_evolution` DISABLE KEYS */;
-INSERT INTO `next_evolution` VALUES (2,2,'001','Ivysauro','002','Venusauro','003'),(3,3,'006','Charizard','007',NULL,NULL);
+INSERT INTO `next_evolution` VALUES (2,2,'001','Ivysauro','002','Venusauro','003'),(3,3,'006','Charizard','007',NULL,NULL),(4,4,'008','Wartotle','009','Blastoise','010'),(5,5,'011',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `next_evolution` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,7 +58,7 @@ CREATE TABLE `pokemons` (
   `num` varchar(4) NOT NULL,
   `nome` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `pokemons` (
 
 LOCK TABLES `pokemons` WRITE;
 /*!40000 ALTER TABLE `pokemons` DISABLE KEYS */;
-INSERT INTO `pokemons` VALUES (2,'001','Bulbassauro'),(3,'006','Charmeleon');
+INSERT INTO `pokemons` VALUES (2,'001','Bulbassauro'),(3,'006','Charmeleon'),(4,'008','Squirtle'),(5,'011','Arbok');
 /*!40000 ALTER TABLE `pokemons` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -89,7 +89,7 @@ CREATE TABLE `prev_evolution` (
   PRIMARY KEY (`id_prev_evol`),
   KEY `id` (`id`),
   CONSTRAINT `prev_evolution_ibfk_1` FOREIGN KEY (`id`) REFERENCES `pokemons` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +98,7 @@ CREATE TABLE `prev_evolution` (
 
 LOCK TABLES `prev_evolution` WRITE;
 /*!40000 ALTER TABLE `prev_evolution` DISABLE KEYS */;
-INSERT INTO `prev_evolution` VALUES (2,2,'001',NULL,NULL,NULL,NULL),(3,3,'006','Charmander','005',NULL,NULL);
+INSERT INTO `prev_evolution` VALUES (2,2,'001',NULL,NULL,NULL,NULL),(3,3,'006','Charmander','005',NULL,NULL),(4,4,'008',NULL,NULL,NULL,NULL),(5,5,'011',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `prev_evolution` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,7 +118,7 @@ CREATE TABLE `tipo` (
   PRIMARY KEY (`id_tipo`),
   KEY `id` (`id`),
   CONSTRAINT `tipo_ibfk_1` FOREIGN KEY (`id`) REFERENCES `pokemons` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,7 +127,7 @@ CREATE TABLE `tipo` (
 
 LOCK TABLES `tipo` WRITE;
 /*!40000 ALTER TABLE `tipo` DISABLE KEYS */;
-INSERT INTO `tipo` VALUES (2,2,'001','Grass','Poison'),(3,3,'006','Fire','Poison');
+INSERT INTO `tipo` VALUES (2,2,'001','Grass','Poison'),(3,3,'006','Fire','Poison'),(4,4,'008','Water',NULL),(5,5,'011','Poison',NULL);
 /*!40000 ALTER TABLE `tipo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,4 +148,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-06-13  9:29:11
+-- Dump completed on 2022-06-13 17:19:05

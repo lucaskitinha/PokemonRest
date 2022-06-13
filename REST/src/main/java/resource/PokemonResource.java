@@ -75,4 +75,22 @@ public class PokemonResource {
 		
 		pokemon.removerPokemon(p);
 	}
+	
+	@GET
+	@Path("{type}")
+	public ArrayList<Pokemon> obterPokemonPorTipo(@PathParam("type") String type) throws ConexaoException, ColecaoException{
+		Connection conn = ConexaoDB.getConexao();
+		ColecaoPokemon pokemons = new ColecaoPokemon(conn);
+		return pokemons.getPokemonsPorTipo(type);
+	}
+	
+	@GET
+	@Path("{numPag}/{qtdPorPag}")
+	public ArrayList<Pokemon> obterPaginasPokemon(@PathParam("numPag") int numPag, @PathParam("qtdPorPag") int qtdPorPag) throws ConexaoException, ColecaoException{
+		Connection conn = ConexaoDB.getConexao();
+		System.out.println(numPag);
+		System.out.println(qtdPorPag);
+		ColecaoPokemon pokemons = new ColecaoPokemon(conn);
+		return pokemons.getPaginaPokemon(numPag, qtdPorPag);
+	}
 }

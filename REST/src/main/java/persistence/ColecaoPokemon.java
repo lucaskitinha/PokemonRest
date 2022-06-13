@@ -530,4 +530,162 @@ public class ColecaoPokemon implements ColecaoPokemonInterface<Pokemon>{
 		
 	}
 
+	@Override
+	public ArrayList<Pokemon> getPokemonsPorTipo(String type) throws ColecaoException {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<Pokemon> pokemons = null;
+		try {
+			pokemons = new ArrayList<Pokemon>();
+			String sql = "SELECT POKEMONS.ID,POKEMONS.NOME,POKEMONS.NUM,TIPO.TIPO1,TIPO.TIPO2,"
+					+ "NEXT_EVOLUTION.NEXT1_NAME,NEXT_EVOLUTION.NEXT1_NUM,NEXT_EVOLUTION.NEXT2_NAME,NEXT_EVOLUTION.NEXT2_NUM,"
+					+ "PREV_EVOLUTION.PREV1_NAME,PREV_EVOLUTION.PREV1_NUM,PREV_EVOLUTION.PREV2_NAME,PREV_EVOLUTION.PREV2_NUM "
+					+ "FROM POKEMONS INNER JOIN TIPO ON POKEMONS.ID = TIPO.ID INNER JOIN NEXT_EVOLUTION ON POKEMONS.ID = NEXT_EVOLUTION.ID "
+					+ "INNER JOIN PREV_EVOLUTION ON POKEMONS.ID = PREV_EVOLUTION.ID "
+					+ "WHERE TIPO.TIPO1 = ? OR TIPO.TIPO2 = ?";
+			ps = this.conn.prepareStatement(sql);
+			ps.setString(1, type);
+			ps.setString(2, type);
+			System.out.println("entrando");
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				ArrayList<String> tipo = new ArrayList<String>();
+				ArrayList<NextEvolutions> nexts = new ArrayList<NextEvolutions>();
+				ArrayList<PrevEvolutions> prevs = new ArrayList<PrevEvolutions>();
+				
+				if(rs.getString("NEXT_EVOLUTION.NEXT1_NAME")!=null) {
+					NextEvolutions n = new NextEvolutions();
+					n.setName(rs.getString("NEXT_EVOLUTION.NEXT1_NAME"));
+					n.setNum(rs.getString("NEXT_EVOLUTION.NEXT1_NUM"));
+					nexts.add(n);
+					if(rs.getString("NEXT_EVOLUTION.NEXT2_NAME")!=null) {
+						NextEvolutions n2 = new NextEvolutions();
+						n2 .setName(rs.getString("NEXT_EVOLUTION.NEXT2_NAME"));
+						n2.setNum(rs.getString("NEXT_EVOLUTION.NEXT2_NUM"));
+						nexts.add(n2);
+					}
+				}
+				
+				if(rs.getString("PREV_EVOLUTION.PREV1_NAME")!=null) {
+					PrevEvolutions p = new PrevEvolutions();
+					p.setName(rs.getString("PREV_EVOLUTION.PREV1_NAME"));
+					p.setNum(rs.getString("PREV_EVOLUTION.PREV1_NUM"));
+					prevs.add(p);
+					if(rs.getString("PREV_EVOLUTION.PREV2_NAME")!=null) {
+						PrevEvolutions p2 = new PrevEvolutions();
+						p2.setName(rs.getString("PREV_EVOLUTION.PREV2_NAME"));
+						p2.setNum(rs.getString("PREV_EVOLUTION.PREV2_NUM"));
+						prevs.add(p2);
+					}
+				}
+				
+				tipo.add(rs.getString("TIPO.TIPO1"));
+				if(rs.getString("TIPO.TIPO2")!=null) {
+					tipo.add(rs.getString("TIPO.TIPO2"));
+				}
+			
+				Pokemon pokemon = new Pokemon(rs.getInt("POKEMONS.ID"), rs.getString("POKEMONS.NUM"), rs.getString("POKEMONS.NOME"), tipo, nexts, prevs);
+				
+				pokemons.add(pokemon);
+			}
+		}catch(SQLException e) {
+			throw new ColecaoException("Erro ao obter os pokemons do banco de dados", e);
+		}finally {
+			try {
+				ps.close();
+				if(rs!=null) {
+					rs.close();
+				}
+			}catch (SQLException e) {
+				throw new ColecaoException("Erro ao fechar manipuladores do banco de dados",e);
+			}
+		}
+		return pokemons;
+	}
+
+	@Override
+	public ArrayList<Pokemon> getPaginaPokemon(int numPagina, int qtdPorPagina) throws ColecaoException {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		ArrayList<Pokemon> pokemons = null;
+		
+		try {
+			pokemons = new ArrayList<Pokemon>();
+			String sql = "SELECT POKEMONS.ID,POKEMONS.NOME,POKEMONS.NUM,TIPO.TIPO1,TIPO.TIPO2,"
+					+ "NEXT_EVOLUTION.NEXT1_NAME,NEXT_EVOLUTION.NEXT1_NUM,NEXT_EVOLUTION.NEXT2_NAME,NEXT_EVOLUTION.NEXT2_NUM,"
+					+ "PREV_EVOLUTION.PREV1_NAME,PREV_EVOLUTION.PREV1_NUM,PREV_EVOLUTION.PREV2_NAME,PREV_EVOLUTION.PREV2_NUM "
+					+ "FROM POKEMONS INNER JOIN TIPO ON POKEMONS.ID = TIPO.ID INNER JOIN NEXT_EVOLUTION ON POKEMONS.ID = NEXT_EVOLUTION.ID "
+					+ "INNER JOIN PREV_EVOLUTION ON POKEMONS.ID = PREV_EVOLUTION.ID ";
+			ps = this.conn.prepareStatement(sql);
+			rs = ps.executeQuery();
+			int qtd = (numPagina-1)*qtdPorPagina;
+			int i=0;
+			while(rs.next()) {
+				ArrayList<String> type = new ArrayList<String>();
+				ArrayList<NextEvolutions> nexts = new ArrayList<NextEvolutions>();
+				ArrayList<PrevEvolutions> prevs = new ArrayList<PrevEvolutions>();
+				
+				if(i>=qtd && i < (qtd+qtdPorPagina)) {
+					if(rs.getString("NEXT_EVOLUTION.NEXT1_NAME")!=null) {
+						NextEvolutions n = new NextEvolutions();
+						n.setName(rs.getString("NEXT_EVOLUTION.NEXT1_NAME"));
+						n.setNum(rs.getString("NEXT_EVOLUTION.NEXT1_NUM"));
+						nexts.add(n);
+						if(rs.getString("NEXT_EVOLUTION.NEXT2_NAME")!=null) {
+							NextEvolutions n2 = new NextEvolutions();
+							n2 .setName(rs.getString("NEXT_EVOLUTION.NEXT2_NAME"));
+							n2.setNum(rs.getString("NEXT_EVOLUTION.NEXT2_NUM"));
+							nexts.add(n2);
+						}
+					}
+					
+					if(rs.getString("PREV_EVOLUTION.PREV1_NAME")!=null) {
+						PrevEvolutions p = new PrevEvolutions();
+						p.setName(rs.getString("PREV_EVOLUTION.PREV1_NAME"));
+						p.setNum(rs.getString("PREV_EVOLUTION.PREV1_NUM"));
+						prevs.add(p);
+						if(rs.getString("PREV_EVOLUTION.PREV2_NAME")!=null) {
+							PrevEvolutions p2 = new PrevEvolutions();
+							p2.setName(rs.getString("PREV_EVOLUTION.PREV2_NAME"));
+							p2.setNum(rs.getString("PREV_EVOLUTION.PREV2_NUM"));
+							prevs.add(p2);
+						}
+					}
+					
+					type.add(rs.getString("TIPO.TIPO1"));
+					if(rs.getString("TIPO.TIPO2")!=null) {
+						type.add(rs.getString("TIPO.TIPO2"));
+					}
+				
+					Pokemon pokemon = new Pokemon(rs.getInt("POKEMONS.ID"), rs.getString("POKEMONS.NUM"), rs.getString("POKEMONS.NOME"), type, nexts, prevs);
+					
+					pokemons.add(pokemon);
+					
+					i=i+1;
+					
+					if(i==(qtd+qtdPorPagina)) {
+						continue;
+					}
+				}else {
+					i=i+1;
+				}
+					
+			}
+		}catch(SQLException e) {
+			throw new ColecaoException("Erro ao obter os pokemons do banco de dados", e);
+		}finally {
+			try {
+				ps.close();
+				if(rs!=null) {
+					rs.close();
+				}
+			}catch (SQLException e) {
+				throw new ColecaoException("Erro ao fechar manipuladores do banco de dados",e);
+			}
+		}
+		return pokemons;
+
+	}
+
 }
